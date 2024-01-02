@@ -10,10 +10,14 @@ public class PhpSend : MonoBehaviour, IMessageReceiver
 {
     [SerializeField]
     private Damageable damageable;
-
+    private SessionID sessionID;
     private string lastId;
     private string lastSessionId;
 
+    private void Awake()
+    {
+        sessionID = FindObjectOfType<SessionID>();
+    }
     private void OnEnable()
     {
         damageable.onDamageMessageReceivers.Add(this);
@@ -93,13 +97,14 @@ public class PhpSend : MonoBehaviour, IMessageReceiver
                 {
                     PosX = senderDamageable.transform.position.x,
                     PosY = senderDamageable.transform.position.y,
-                    PosZ = senderDamageable.transform.position.z
+                    PosZ = senderDamageable.transform.position.z,
+                    SessionId = int.Parse(sessionID.lastSessionId)
                 };
 
                 string jsonData = JsonUtility.ToJson(damageData);
 
                 // Post JSON data to the server
-                StartCoroutine(PostToServer("https://citmalumnes.upc.es/~juanam15/Damage.php", jsonData));
+                StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Damage.php", jsonData));
             }
         }
     }
@@ -116,5 +121,6 @@ public class PositionData
 {
     public float PosX;
     public float PosY;  
-    public float PosZ;  
+    public float PosZ;
+    public int SessionId;
 }

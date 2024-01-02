@@ -1,8 +1,8 @@
 <?php
 $servername = "localhost";
-$username   = "juanam15";
-$password   = "9qcnUtYaMqSV";
-$dbname     = "juanam15";
+$username   = "polfo";
+$password   = "7uHDSDazj5TM";
+$dbname     = "polfo";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -46,9 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $posX = $data->PosX;
         $posY = $data->PosY;
         $posZ = $data->PosZ;
+        $sessionId = $data->SessionId;
 
         // Insert data into the database
-        $sql = "INSERT INTO Damage (PosX, PosY, PosZ) VALUES ('$posX', '$posY', '$posZ')";
+        $sql = "INSERT INTO Damage (PosX, PosY, PosZ, SessionId) VALUES ('$posX', '$posY', '$posZ', '$sessionId')";
 
         if (mysqli_query($conn, $sql)) {
             echo "Damage has been added successfully! ";
