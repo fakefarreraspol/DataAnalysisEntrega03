@@ -117,10 +117,3 @@ public class PhpSend : MonoBehaviour, IMessageReceiver
     }
 }
 
-public class PositionData
-{
-    public float PosX;
-    public float PosY;  
-    public float PosZ;
-    public int SessionId;
-}
