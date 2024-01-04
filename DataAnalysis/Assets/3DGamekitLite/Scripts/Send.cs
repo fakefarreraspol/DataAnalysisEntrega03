@@ -1,3 +1,4 @@
+using Gamekit3D;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class Send : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player = FindAnyObjectByType<PlayerController>().gameObject;
+        IDsession = FindObjectOfType<SessionID>();
         InvokeRepeating("SendPositionData", 3, 3);
     }
 
@@ -27,7 +30,7 @@ public class Send : MonoBehaviour
         string jsonData = JsonUtility.ToJson(damageData);
 
         // Post JSON data to the server
-        StartCoroutine(PostToServer("", jsonData)); ///////////////////////falta url
+        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Position.php", jsonData)); ///////////////////////falta url
     }
 
 
