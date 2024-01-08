@@ -9,6 +9,7 @@ public class SendDeath : MonoBehaviour, IMessageReceiver
 {
     [SerializeField] private Damageable damageable;
     private SessionID sessionID;
+    public GameObject playerr;
     private void Start()
     {
         sessionID = FindObjectOfType<SessionID>();
@@ -41,37 +42,25 @@ public class SendDeath : MonoBehaviour, IMessageReceiver
 
     public void OnReceiveMessage(MessageType type, object sender, object msg)
     {
+        Debug.Log("message");
         if (type == MessageType.DEAD)
         {
-            if (msg is Damageable.DamageMessage)
+            Debug.Log("HOLA");
+            
+            // Create a JSON object with position information
+            PositionData damageData = new PositionData()
             {
-                Damageable.DamageMessage damageMessage = (Damageable.DamageMessage)msg;
+                PosX = playerr.transform.position.x,
+                PosY = playerr.transform.position.y,
+                PosZ = playerr.transform.position.z,
+                SessionId = int.Parse(sessionID.lastSessionId)
+            };
 
-                Damageable senderDamageable = (Damageable)sender;
+            string jsonData = JsonUtility.ToJson(damageData);
 
-                // Check for valid numeric values before sending
-                if (!IsValidNumericValue((int)senderDamageable.transform.position.x) ||
-                    !IsValidNumericValue((int)senderDamageable.transform.position.y) ||
-                    !IsValidNumericValue((int)senderDamageable.transform.position.z))
-                {
-                    Debug.LogError("Invalid position values!");
-                    return;
-                }
-
-                // Create a JSON object with position information
-                PositionData damageData = new PositionData()
-                {
-                    PosX = senderDamageable.transform.position.x,
-                    PosY = senderDamageable.transform.position.y,
-                    PosZ = senderDamageable.transform.position.z,
-                    SessionId = int.Parse(sessionID.lastSessionId)
-                };
-
-                string jsonData = JsonUtility.ToJson(damageData);
-
-                // Post JSON data to the server
-                StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Death.php", jsonData));
-            }
+            Debug.Log(jsonData);
+            // Post JSON data to the server
+            StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Death.php", jsonData));
         }
     }
     private bool IsValidNumericValue(float value)
