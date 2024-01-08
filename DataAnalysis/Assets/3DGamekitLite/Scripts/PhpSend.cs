@@ -98,13 +98,14 @@ public class PhpSend : MonoBehaviour, IMessageReceiver
                     PosX = senderDamageable.transform.position.x,
                     PosY = senderDamageable.transform.position.y,
                     PosZ = senderDamageable.transform.position.z,
-                    SessionId = int.Parse(sessionID.lastSessionId)
+                    SessionId = int.Parse(sessionID.lastSessionId),
+                    tableName = "Damage"
                 };
 
                 string jsonData = JsonUtility.ToJson(damageData);
 
                 // Post JSON data to the server
-                StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Damage.php", jsonData));
+                StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/SendDataToTable.php", jsonData));
             }
         }
     }

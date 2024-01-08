@@ -55,14 +55,15 @@ public class SendJump : MonoBehaviour
             PosX = playerr.transform.position.x,
             PosY = playerr.transform.position.y,
             PosZ = playerr.transform.position.z,
-            SessionId = int.Parse(sessionID.lastSessionId)
+            SessionId = int.Parse(sessionID.lastSessionId),
+            tableName = "Jumped"
         };
 
         string jsonData = JsonUtility.ToJson(damageData);
 
         Debug.Log(jsonData);
         // Post JSON data to the server
-        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Jump.php", jsonData));
+        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/SendDataToTable.php", jsonData));
     }
     
 }

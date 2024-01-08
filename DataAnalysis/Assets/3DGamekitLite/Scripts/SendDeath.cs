@@ -61,14 +61,15 @@ public class SendDeath : MonoBehaviour, IMessageReceiver
             PosX = playerr.transform.position.x,
             PosY = playerr.transform.position.y,
             PosZ = playerr.transform.position.z,
-            SessionId = int.Parse(sessionID.lastSessionId)
+            SessionId = int.Parse(sessionID.lastSessionId),
+            tableName = "Died"
         };
 
         string jsonData = JsonUtility.ToJson(damageData);
 
         Debug.Log(jsonData);
         // Post JSON data to the server
-        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Death.php", jsonData));
+        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/SendDataToTable.php", jsonData));
     }
 
 }

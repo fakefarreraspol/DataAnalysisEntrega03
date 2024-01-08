@@ -13,7 +13,7 @@ public class Send : MonoBehaviour
     {
         player = FindAnyObjectByType<PlayerController>().gameObject;
         IDsession = FindObjectOfType<SessionID>();
-        InvokeRepeating("SendPositionData", 3, 3);
+        InvokeRepeating("SendPositionData", 0.5f, 3);
     }
 
     private void SendPositionData()
@@ -24,13 +24,14 @@ public class Send : MonoBehaviour
             PosX = player.transform.position.x,
             PosY = player.transform.position.y,
             PosZ = player.transform.position.z,
-            SessionId = int.Parse(IDsession.lastSessionId)
+            SessionId = int.Parse(IDsession.lastSessionId),
+            tableName = "Position"
         };
 
         string jsonData = JsonUtility.ToJson(damageData);
 
         // Post JSON data to the server
-        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Position.php", jsonData)); ///////////////////////falta url
+        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/SendDataToTable.php", jsonData)); ///////////////////////falta url
     }
 
 
