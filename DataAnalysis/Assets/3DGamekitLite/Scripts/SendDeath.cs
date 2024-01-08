@@ -63,9 +63,5 @@ public class SendDeath : MonoBehaviour, IMessageReceiver
             StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Death.php", jsonData));
         }
     }
-    private bool IsValidNumericValue(float value)
-    {
-        // Add additional validation logic if needed
-        return !float.IsNaN(value) && !float.IsInfinity(value);
-    }
+
 }
