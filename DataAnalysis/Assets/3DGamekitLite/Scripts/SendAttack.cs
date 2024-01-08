@@ -1,5 +1,6 @@
 using Gamekit3D;
 using Gamekit3D.Message;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,11 +11,14 @@ public class SendAttack : MonoBehaviour
 
     private SessionID sessionID;
     public GameObject playerr;
-    private PlayerController playerController;
+    public static Action OnPlayerAttacked;
     private void Start()
     {
         sessionID = FindObjectOfType<SessionID>();
-        playerController = playerr.GetComponent<PlayerController>();
+    }
+    private void OnEnable()
+    {
+        OnPlayerAttacked += RetrievePlayerData;
     }
 
     // Start is called before the first frame update
@@ -37,6 +41,24 @@ public class SendAttack : MonoBehaviour
                 // Handle the response as needed
             }
         }
+    }
+
+    private void RetrievePlayerData()
+    {
+        // Create a JSON object with position information
+        PositionData damageData = new PositionData()
+        {
+            PosX = playerr.transform.position.x,
+            PosY = playerr.transform.position.y,
+            PosZ = playerr.transform.position.z,
+            SessionId = int.Parse(sessionID.lastSessionId)
+        };
+
+        string jsonData = JsonUtility.ToJson(damageData);
+
+        Debug.Log(jsonData);
+        // Post JSON data to the server
+        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/Attack.php", jsonData));
     }
 
 

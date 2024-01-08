@@ -191,6 +191,10 @@ namespace Gamekit3D
 
             if (m_Input.Attack && canAttack)
                 m_Animator.SetTrigger(m_HashMeleeAttack);
+            if (m_Input.Attack && canAttack && !m_InCombo)
+            {
+                SendAttack.OnPlayerAttacked();
+            }
 
             CalculateForwardMovement();
             CalculateVerticalMovement();
@@ -289,6 +293,8 @@ namespace Gamekit3D
                     m_VerticalSpeed = jumpSpeed;
                     m_IsGrounded = false;
                     m_ReadyToJump = false;
+
+                    SendJump.OnPlayerJumped();
                 }
             }
             else
