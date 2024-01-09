@@ -7,22 +7,34 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class EnemyDead : MonoBehaviour
+public class EnemyDead : MonoBehaviour, IMessageReceiver
 {
 
     private SessionID sessionID;
-    public GameObject playerr;
-    public static Action<string> OnEnemyDied;
 
-    private List<ChomperBehavior> chompers;
-    private List<SpitterBehaviour> spitter;
+
+
+    public List<Damageable> enemies = new List<Damageable>();
+
     private void Start()
     {
         sessionID = FindObjectOfType<SessionID>();
+
+        Damageable[] enemiesInScene = FindObjectsOfType<Damageable>();
+
+        for (int i = 0; i < enemiesInScene.Length; i++)
+        {
+            enemies.Add(enemiesInScene[i]);
+        }
+
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].onDamageMessageReceivers.Add(this);
+        }
     }
     public void OnEnable()
     {
-        OnEnemyDied += GetEnemyInfo;
+        
     }
     // Start is called before the first frame update
     IEnumerator PostToServer(string url, string jsonData)
@@ -45,28 +57,40 @@ public class EnemyDead : MonoBehaviour
             }
         }
     }
-    private void Update()
+    public void OnReceiveMessage(MessageType type, object sender, object msg)
     {
-        
-    }
-    private void GetEnemyInfo(string name)
-    {
+        Damageable senderDamageable = (Damageable)sender;
+
+        // Check for valid numeric values before sending
+        if (!IsValidNumericValue((int)senderDamageable.transform.position.x) ||
+            !IsValidNumericValue((int)senderDamageable.transform.position.y) ||
+            !IsValidNumericValue((int)senderDamageable.transform.position.z))
+        {
+            Debug.LogError("Invalid position values!");
+            return;
+        }
+
         // Create a JSON object with position information
         EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness damageData = new EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness()
         {
-            PosX = playerr.transform.position.x,
-            PosY = playerr.transform.position.y,
-            PosZ = playerr.transform.position.z,
+            PosX = senderDamageable.transform.position.x,
+            PosY = senderDamageable.transform.position.y,
+            PosZ = senderDamageable.transform.position.z,
             SessionId = int.Parse(sessionID.lastSessionId),
             tableName = "EnemyDeath",
-            eName = name
+
         };
 
         string jsonData = JsonUtility.ToJson(damageData);
 
-        Debug.Log(jsonData);
         // Post JSON data to the server
         StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/EnemyDeadTable.php", jsonData));
+    }
+
+    private bool IsValidNumericValue(float value)
+    {
+        // Add additional validation logic if needed
+        return !float.IsNaN(value) && !float.IsInfinity(value);
     }
 
 }
@@ -80,3 +104,5 @@ class EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness
     public string tableName;
     public string eName;
 }
+
+
