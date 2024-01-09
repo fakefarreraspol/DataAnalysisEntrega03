@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Retrieve the last session ID from the 'damage' table
-$sql = "SELECT SessionId FROM Damage ORDER BY TimeStamp DESC LIMIT 1";
+$sql = "SELECT SessionId FROM Position ORDER BY TimeStamp DESC LIMIT 1";
 $result = $conn->query($sql);
 
 if ($result !== false) {
