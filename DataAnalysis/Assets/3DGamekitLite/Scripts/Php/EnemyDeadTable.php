@@ -48,9 +48,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $posZ = $data->PosZ;
         $sessionId = $data->SessionId;
         $table = $data->tableName;
-
+        $monsterName = $data->eName;
         // Insert data into the database
-        $sql = "INSERT INTO $table (PosX, PosY, PosZ, SessionId) VALUES ('$posX', '$posY', '$posZ', '$sessionId')";
+        $sql = "INSERT INTO $table (PosX, PosY, PosZ, SessionId, MonsterName) VALUES ('$posX', '$posY', '$posZ', '$sessionId', '$monsterName')";
 
         if (mysqli_query($conn, $sql)) {
             echo "$table has been added successfully! ";

@@ -71,7 +71,12 @@ public class EnemyDead : MonoBehaviour, IMessageReceiver
                 Debug.LogError("Invalid position values!");
                 return;
             }
+            string enemyName;
 
+            if (senderDamageable.gameObject.GetComponent<ChomperBehavior>()) enemyName = "Chomper";
+            else if (senderDamageable.gameObject.GetComponent<SpitterBehaviour>()) enemyName = "Spitter";
+            else enemyName = "SigmaMale";
+            Debug.Log(enemyName);
             // Create a JSON object with position information
             EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness damageData = new EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness()
             {
@@ -80,7 +85,7 @@ public class EnemyDead : MonoBehaviour, IMessageReceiver
                 PosZ = senderDamageable.transform.position.z,
                 SessionId = int.Parse(sessionID.lastSessionId),
                 tableName = "EnemyDeath",
-
+                eName = enemyName
             };
 
             string jsonData = JsonUtility.ToJson(damageData);
