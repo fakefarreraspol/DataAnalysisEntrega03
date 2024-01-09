@@ -59,32 +59,35 @@ public class EnemyDead : MonoBehaviour, IMessageReceiver
     }
     public void OnReceiveMessage(MessageType type, object sender, object msg)
     {
-        Damageable senderDamageable = (Damageable)sender;
-
-        // Check for valid numeric values before sending
-        if (!IsValidNumericValue((int)senderDamageable.transform.position.x) ||
-            !IsValidNumericValue((int)senderDamageable.transform.position.y) ||
-            !IsValidNumericValue((int)senderDamageable.transform.position.z))
+        if (type == MessageType.DEAD)
         {
-            Debug.LogError("Invalid position values!");
-            return;
+            Damageable senderDamageable = (Damageable)sender;
+
+            // Check for valid numeric values before sending
+            if (!IsValidNumericValue((int)senderDamageable.transform.position.x) ||
+                !IsValidNumericValue((int)senderDamageable.transform.position.y) ||
+                !IsValidNumericValue((int)senderDamageable.transform.position.z))
+            {
+                Debug.LogError("Invalid position values!");
+                return;
+            }
+
+            // Create a JSON object with position information
+            EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness damageData = new EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness()
+            {
+                PosX = senderDamageable.transform.position.x,
+                PosY = senderDamageable.transform.position.y,
+                PosZ = senderDamageable.transform.position.z,
+                SessionId = int.Parse(sessionID.lastSessionId),
+                tableName = "EnemyDeath",
+
+            };
+
+            string jsonData = JsonUtility.ToJson(damageData);
+
+            // Post JSON data to the server
+            StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/EnemyDeadTable.php", jsonData));
         }
-
-        // Create a JSON object with position information
-        EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness damageData = new EnemigoMaloEpicoSigmaMaleDataLooksmaxingMewingLladosFitness()
-        {
-            PosX = senderDamageable.transform.position.x,
-            PosY = senderDamageable.transform.position.y,
-            PosZ = senderDamageable.transform.position.z,
-            SessionId = int.Parse(sessionID.lastSessionId),
-            tableName = "EnemyDeath",
-
-        };
-
-        string jsonData = JsonUtility.ToJson(damageData);
-
-        // Post JSON data to the server
-        StartCoroutine(PostToServer("https://citmalumnes.upc.es/~polfo/EnemyDeadTable.php", jsonData));
     }
 
     private bool IsValidNumericValue(float value)
